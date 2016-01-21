@@ -52,4 +52,7 @@ class ImageItem(Item):
 
 
 class Follower(models.Model):
-    pass
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    collection = models.ForeignKey(Collection)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
