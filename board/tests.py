@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
-from .models import Collection, DocumentItem, Item
+from .models import Board, Document, Item
 from django.contrib.auth.models import User
 
 
@@ -14,11 +14,11 @@ class BoardTestCase(TestCase):
 class ItemTestCase(TestCase):
     def testItemCRUD(self):
         user = User.objects.create(username="u1")
-        board = Collection.objects.create(user, "boardName", "boardDescription")
+        board = Board.objects.create(user, "boardName", "boardDescription")
         print(board)
 
         for x in range(100):
-            item = DocumentItem()
+            item = Document()
             item.board = board
             item.title = "title"
             item.content = "hello content"
@@ -28,5 +28,5 @@ class ItemTestCase(TestCase):
         for i in Item.objects.all():
             print(i)
 
-        for i in DocumentItem.objects.all():
+        for i in Document.objects.all():
             print(i)

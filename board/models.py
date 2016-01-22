@@ -7,30 +7,31 @@ from django.conf import settings
 from core.models import TimestampedModel
 
 
-class CollectionManager(models.Manager):
+class BoardManager(models.Manager):
     def create(self, user, name, description):
         return super().create(user=user, name=name, description=description)
 
 
-class Collection(TimestampedModel):
+class Board(TimestampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=120)
     description = models.TextField()
-    objects = CollectionManager()
+    objects = BoardManager()
 
     def __str__(self):
         return "board[{}]: {} {}".format(self.id, self.name, self.description)
 
 
 class Item(TimestampedModel):
-    board = models.ForeignKey(Collection)
+    board = models.ForeignKey(Board)
     title = models.CharField(max_length=120)
+    type_id = models.CharField(max_length=8)
 
     def __str__(self):
         return "Item{}".format(self.simhash)
 
 
-class DocumentItem(Item):
+class Document(Item):
     content = models.TextField()
     simhash = models.CharField(max_length=16)
 
@@ -39,7 +40,7 @@ class DocumentItem(Item):
 
 
 class AbstractFileItem(Item):
-    name = models.CharField(max_length=128)
+    filename = models.CharField(max_length=128)
     size = models.BigIntegerField()
     sha1 = models.CharField(max_length=20)
 
@@ -47,17 +48,18 @@ class AbstractFileItem(Item):
         abstract = True
 
 
-class FileItem(AbstractFileItem):
-    pass
+class File(AbstractFileItem):
+    description = models.TextField(max_length=255)
 
 
-class ImageItem(AbstractFileItem):
+class Image(AbstractFileItem):
     width = models.IntegerField()
     height = models.IntegerField()
+    mime = models.CharField(max_length=8)
 
 
 class Follower(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    collection = models.ForeignKey(Collection)
+    board = models.ForeignKey(Board)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

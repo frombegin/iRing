@@ -4,5 +4,5 @@
 from django.apps import AppConfig
 
 
-class IRingConfig(AppConfig):
-    name = 'iRing'
+class BoardConfig(AppConfig):
+    name = 'board'
